@@ -9,7 +9,6 @@ import Input from './Input';
 import Colors from '../constants/Colors';
 
 const HeaderCard = props => {
-  console.log('HeaderCardProps', props);
   return (
     <Card style={styles.card}>
       <View style={styles.productHeader}>
@@ -33,22 +32,24 @@ const HeaderCard = props => {
             {props.info}
           </MyText>
         </View>
-        <Pressable
-          onPress={() => {
-            if (props.onPress) {
-              props.onPress();
-            }
-            console.log('nothing!');
-          }}>
-          <Text
-            style={{
-              color: Colors.primary,
-              fontFamily: 'SourceSansPro-SemiBold',
-              fontSize: 16,
+        {props.buttonText && (
+          <Pressable
+            onPress={() => {
+              if (props.onPress) {
+                props.onPress();
+              }
+              console.log('nothing!');
             }}>
-            {props.buttonText}
-          </Text>
-        </Pressable>
+            <Text
+              style={{
+                color: Colors.primary,
+                fontFamily: 'SourceSansPro-SemiBold',
+                fontSize: 16,
+              }}>
+              {props.buttonText}
+            </Text>
+          </Pressable>
+        )}
       </View>
       <View style={styles.searchInput}>
         <Input

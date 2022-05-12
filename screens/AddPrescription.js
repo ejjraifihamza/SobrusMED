@@ -7,17 +7,22 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
-  Modal,
-  Alert,
 } from 'react-native';
 import MainButton from '../components/MainButton';
 import OrdDate from '../components/OrdDate';
 import Colors from '../constants/Colors';
 import Card from '../components/Card';
 import TitleText from '../components/TitleText';
+import PatientModal from '../components/PatientModal';
+import ProductModal from '../components/ProductModal';
 import {patientDataFilter, productDataFilter} from '../utils/dataFilter';
+import {
+  addRequest,
+  getPatientRequest,
+  getProductRequest,
+} from '../utils/requests';
 
-const AddPrescription = ({navigation, route}) => {
+const AddPrescription = ({navigation}) => {
   const [filterdData, setfilterdData] = useState([]);
   const [masterData, setmasterData] = useState([]);
   const [search, setsearch] = useState('');
@@ -53,47 +58,18 @@ const AddPrescription = ({navigation, route}) => {
 
   const submitHandler = Prescription => {
     // const apiURL = `http://10.0.2.2/doctor/addPrescription`;
-    const apiURL = `getPatientshttps://sobrus-med.herokuapp.com/doctor/addPrescription`;
-    fetch(apiURL, {
-      method: 'POST',
-      headers: {'Content-type': 'application/json'},
-      credentials: 'include',
-      body: JSON.stringify(Prescription),
-    })
-      .then(response => response.json())
-      .then(responseJson => {
-        console.log(responseJson);
-        if (responseJson.status === 'success') {
-          Alert.alert(
-            'Votre prescription a été enregistrée avec succès',
-            'retour à la page de prescription',
-            [
-              {
-                text: "D'accord",
-                onPress: () => {
-                  navigation.navigate('Prescription');
-                },
-              },
-            ],
-          );
-        } else if (responseJson.status === 'error') {
-          Alert.alert(
-            'vos prescription ne sont pas mises à jour avec succès',
-            'Réessayez plus tard',
-            [
-              {
-                text: 'Cancel',
-                onPress: () => {
-                  console.log('cancel');
-                },
-              },
-            ],
-          );
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    const apiURL = `https://sobrus-med.herokuapp.com/doctor/addPrescription`;
+    addRequest(
+      apiURL,
+      'POST',
+      Prescription,
+      'Votre prescription a été enregistrée avec succès',
+      'retour à la page de prescription',
+      navigation,
+      'Prescription',
+      'vos prescription ne sont pas mises à jour avec succès',
+      'Réessayez plus tard',
+    );
   };
 
   const FindPatient = text => {
@@ -102,16 +78,7 @@ const AddPrescription = ({navigation, route}) => {
   const fetchPatients = () => {
     // const apiURL = 'http://10.0.2.2/doctor/getPatients';
     const apiURL = 'https://sobrus-med.herokuapp.com/doctor/getPatients';
-    fetch(apiURL)
-      .then(response => response.json())
-      .then(responseJson => {
-        console.log(responseJson.output);
-        setfilterdData(responseJson.output.patients);
-        setmasterData(responseJson.output.patients);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    getPatientRequest(apiURL, setfilterdData, setmasterData);
   };
 
   const FindProduct = text => {
@@ -125,16 +92,7 @@ const AddPrescription = ({navigation, route}) => {
   const fetchProducts = () => {
     // const apiURL = 'http://10.0.2.2/doctor/getProducts';
     const apiURL = 'https://sobrus-med.herokuapp.com/doctor/getProducts';
-    fetch(apiURL)
-      .then(response => response.json())
-      .then(responseJson => {
-        console.log(responseJson.output);
-        setProductFilterdData(responseJson.output.products);
-        setProductMasterData(responseJson.output.products);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    getProductRequest(apiURL, setProductFilterdData, setProductMasterData);
   };
 
   useEffect(() => {
@@ -142,6 +100,7 @@ const AddPrescription = ({navigation, route}) => {
     fetchPatients();
     return () => {};
   }, []);
+
   return (
     <ScrollView>
       <View style={styles.screen}>
@@ -189,19 +148,7 @@ const AddPrescription = ({navigation, route}) => {
                 onPress={() => setModalVisible(true)}
                 style={{width: '90%', justifyContent: 'center'}}>
                 <View style={{width: '100%', justifyContent: 'center'}}>
-                  <View
-                    style={{
-                      height: 50,
-                      paddingVertical: 10,
-                      paddingLeft: 60,
-                      borderColor: Colors.gray,
-                      borderWidth: 0.5,
-                      borderRadius: 10,
-                      width: '100%',
-                      backgroundColor: Colors.headerBackground,
-                    }}
-                  />
-
+                  <View style={styles.chooseField} />
                   <View
                     style={{
                       height: 25,
@@ -219,16 +166,7 @@ const AddPrescription = ({navigation, route}) => {
                       }}
                     />
                   </View>
-                  <View
-                    style={{
-                      height: 20,
-                      width: 20,
-                      borderRadius: 50,
-                      borderColor: 'black',
-                      overflow: 'hidden',
-                      position: 'absolute',
-                      right: 15,
-                    }}>
+                  <View style={styles.pullDown}>
                     <Image
                       style={{width: '100%', height: '100%'}}
                       source={require('../assets/icons/icons8-pull-down-50.png')}
@@ -241,164 +179,33 @@ const AddPrescription = ({navigation, route}) => {
                     }}>
                     <Text>{patient}</Text>
                   </View>
-                  <Text
-                    style={{
-                      padding: 5,
-                      backgroundColor: 'white',
-                      position: 'absolute',
-                      bottom: 38,
-                      left: 10,
-                    }}>
-                    Patient
-                  </Text>
+                  <Text style={styles.fieldText}>Patient</Text>
                 </View>
               </TouchableOpacity>
-              <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                  Alert.alert('Modal has been closed.');
-                  setModalVisible(!modalVisible);
-                }}>
-                <View
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    alignItems: 'center',
-                    backgroundColor: Colors.lightGray,
-                  }}>
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      marginVertical: 10,
-                      width: '90%',
-                      borderColor: 'black',
-                      borderWidth: 0.7,
-                      borderRadius: 10,
-                    }}>
-                    <TextInput
-                      placeholder="Recherche un patient"
-                      style={{height: 40, padding: 10}}
-                      onChangeText={FindPatient}
-                      value={search}
-                    />
-                  </View>
-                  <ScrollView
-                    style={{
-                      width: '90%',
-                      marginBottom: 20,
-                    }}>
-                    <View
-                      style={{
-                        width: '100%',
-                      }}>
-                      {filterdData.map((item, index) => {
-                        return (
-                          <TouchableOpacity
-                            onPress={() => {
-                              setPatient(item.fullName);
-                              setPatientId(item._id);
-                              setModalVisible(false);
-                              console.log('patientID', item._id);
-                            }}>
-                            <View
-                              key={item._id}
-                              style={{
-                                borderBottomColor: 'black',
-                                borderBottomWidth: 0.7,
-                                paddingVertical: 10,
-                              }}>
-                              <Text>{item.fullName}</Text>
-                            </View>
-                          </TouchableOpacity>
-                        );
-                      })}
-                    </View>
-                  </ScrollView>
-                </View>
-              </Modal>
-              <Modal
-                animationType="slide"
-                transparent={true}
-                visible={productModalVisible}
-                onRequestClose={() => {
-                  Alert.alert('Modal has been closed.');
-                  setModalVisible(!productModalVisible);
-                }}>
-                <View
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    alignItems: 'center',
-                    backgroundColor: Colors.lightGray,
-                  }}>
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      marginVertical: 10,
-                      width: '90%',
-                      borderColor: 'black',
-                      borderWidth: 0.7,
-                      borderRadius: 10,
-                    }}>
-                    <TextInput
-                      placeholder="Rechercher un produit"
-                      style={{height: 40, padding: 10}}
-                      onChangeText={FindProduct}
-                      value={ProductSearch}
-                    />
-                  </View>
-                  <ScrollView
-                    style={{
-                      width: '90%',
-                      marginBottom: 20,
-                    }}>
-                    <View
-                      style={{
-                        width: '100%',
-                      }}>
-                      {productFilterdData.map((item, index) => {
-                        return (
-                          <TouchableOpacity
-                            onPress={() => {
-                              setProduct(item.productName);
-                              setProductId(item._id);
-                              setProductModalVisible(false);
-                            }}>
-                            <View
-                              key={item._id}
-                              style={{
-                                borderBottomColor: 'black',
-                                borderBottomWidth: 0.7,
-                                paddingVertical: 10,
-                              }}>
-                              <Text>{item.productName}</Text>
-                            </View>
-                          </TouchableOpacity>
-                        );
-                      })}
-                    </View>
-                  </ScrollView>
-                </View>
-              </Modal>
+              <PatientModal
+                modalVisible={modalVisible}
+                FindPatient={FindPatient}
+                search={search}
+                filterdData={filterdData}
+                setPatient={setPatient}
+                setPatientId={setPatientId}
+                setModalVisible={setModalVisible}
+              />
+              <ProductModal
+                productModalVisible={productModalVisible}
+                FindProduct={FindProduct}
+                ProductSearch={ProductSearch}
+                productFilterdData={productFilterdData}
+                setProduct={setProduct}
+                setProductId={setProductId}
+                setProductModalVisible={setProductModalVisible}
+              />
               <View
                 style={{width: '90%', justifyContent: 'center', marginTop: 40}}>
                 <TouchableOpacity
                   onPress={() => setProductModalVisible(true)}
                   style={{width: '100%', justifyContent: 'center'}}>
-                  <View
-                    style={{
-                      height: 50,
-                      paddingVertical: 10,
-                      paddingLeft: 60,
-                      borderColor: Colors.gray,
-                      borderWidth: 0.5,
-                      borderRadius: 10,
-                      width: '100%',
-                      backgroundColor: Colors.headerBackground,
-                    }}
-                  />
+                  <View style={styles.chooseField} />
 
                   <View
                     style={{
@@ -414,16 +221,7 @@ const AddPrescription = ({navigation, route}) => {
                       source={require('../assets/icons/drugs-capsules-and-pills-3.png')}
                     />
                   </View>
-                  <View
-                    style={{
-                      height: 20,
-                      width: 20,
-                      borderRadius: 50,
-                      borderColor: 'black',
-                      overflow: 'hidden',
-                      position: 'absolute',
-                      right: 15,
-                    }}>
+                  <View style={styles.pullDown}>
                     <Image
                       style={{width: '100%', height: '100%'}}
                       source={require('../assets/icons/icons8-pull-down-50.png')}
@@ -439,73 +237,28 @@ const AddPrescription = ({navigation, route}) => {
                       {' ...'}
                     </Text>
                   </View>
-                  <Text
-                    style={{
-                      padding: 5,
-                      backgroundColor: 'white',
-                      position: 'absolute',
-                      bottom: 38,
-                      left: 10,
-                    }}>
-                    Produit
-                  </Text>
+                  <Text style={styles.fieldText}>Produit</Text>
                 </TouchableOpacity>
               </View>
               <View
                 style={{width: '90%', justifyContent: 'center', marginTop: 20}}>
                 <TextInput
                   onChangeText={dosageHandler}
-                  style={{
-                    height: 50,
-                    paddingVertical: 10,
-                    paddingLeft: 16,
-                    borderColor: Colors.gray,
-                    borderWidth: 0.5,
-                    borderRadius: 10,
-                    width: '100%',
-                    backgroundColor: Colors.headerBackground,
-                  }}
+                  style={styles.inputText}
                   value={dosage}
                   placeholder="entrez votre posologie"
                 />
-                <Text
-                  style={{
-                    padding: 5,
-                    backgroundColor: 'white',
-                    position: 'absolute',
-                    bottom: 38,
-                    left: 10,
-                  }}>
-                  Posologie
-                </Text>
+                <Text style={styles.fieldText}>Posologie</Text>
               </View>
               <View
                 style={{width: '90%', justifyContent: 'center', marginTop: 20}}>
                 <TextInput
                   onChangeText={durationHandler}
-                  style={{
-                    height: 50,
-                    paddingVertical: 10,
-                    paddingLeft: 16,
-                    borderColor: Colors.gray,
-                    borderWidth: 0.5,
-                    borderRadius: 10,
-                    width: '100%',
-                    backgroundColor: Colors.headerBackground,
-                  }}
+                  style={styles.inputText}
                   value={duration}
                   placeholder="entrez votre durée"
                 />
-                <Text
-                  style={{
-                    padding: 5,
-                    backgroundColor: 'white',
-                    position: 'absolute',
-                    bottom: 38,
-                    left: 10,
-                  }}>
-                  Durée du traitement
-                </Text>
+                <Text style={styles.fieldText}>Durée du traitement</Text>
               </View>
               <MainButton
                 style={{
@@ -578,6 +331,25 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  chooseField: {
+    height: 50,
+    paddingVertical: 10,
+    paddingLeft: 60,
+    borderColor: Colors.gray,
+    borderWidth: 0.5,
+    borderRadius: 10,
+    width: '100%',
+    backgroundColor: Colors.headerBackground,
+  },
+  pullDown: {
+    height: 20,
+    width: 20,
+    borderRadius: 50,
+    borderColor: 'black',
+    overflow: 'hidden',
+    position: 'absolute',
+    right: 15,
+  },
   button: {
     borderRadius: 20,
     padding: 10,
@@ -593,6 +365,23 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  inputText: {
+    height: 50,
+    paddingVertical: 10,
+    paddingLeft: 16,
+    borderColor: Colors.gray,
+    borderWidth: 0.5,
+    borderRadius: 10,
+    width: '100%',
+    backgroundColor: Colors.headerBackground,
+  },
+  fieldText: {
+    padding: 5,
+    backgroundColor: 'white',
+    position: 'absolute',
+    bottom: 38,
+    left: 10,
   },
   modalText: {
     marginBottom: 15,

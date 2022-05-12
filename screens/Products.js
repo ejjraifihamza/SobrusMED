@@ -16,6 +16,7 @@ import Card from '../components/Card';
 import Colors from '../constants/Colors';
 import HeaderCard from '../components/HeaderCard';
 import {productDataFilter} from '../utils/dataFilter';
+import {getProductRequest} from '../utils/requests';
 
 const Products = props => {
   const [Refreshing, setRefreshing] = useState(false);
@@ -25,34 +26,27 @@ const Products = props => {
 
   const FindProduct = text => {
     productDataFilter(text, masterData, setfilterdData, setsearch);
-    // if (text) {
-    //   const newData = masterData.filter(item => {
-    //     const itemData = item.productName
-    //       ? item.productName.toUpperCase()
-    //       : ''.toUpperCase();
-    //     const textData = text.toUpperCase();
-    //     return itemData.indexOf(textData) > -1;
-    //   });
-    //   setfilterdData(newData);
-    //   setsearch(text);
-    // } else {
-    //   setfilterdData(masterData);
-    //   setsearch(text);
-    // }
   };
 
   const fetchProducts = () => {
     // const apiURL = 'http://10.0.2.2/doctor/getProducts';
     const apiURL = 'https://sobrus-med.herokuapp.com/doctor/getProducts';
-    fetch(apiURL)
-      .then(response => response.json())
-      .then(responseJson => {
-        setfilterdData(responseJson.output.products);
-        setmasterData(responseJson.output.products);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    getProductRequest(apiURL, setfilterdData, setmasterData);
+  };
+
+  const colors = [
+    Colors.primary,
+    Colors.green,
+    Colors.orchid,
+    Colors.blue,
+    Colors.secondary,
+  ];
+  let colorIndex = 0;
+  const getColor = () => {
+    if (colorIndex > 4) colorIndex = 0;
+    const color = colors[colorIndex];
+    colorIndex++;
+    return color;
   };
 
   useEffect(() => {
@@ -65,7 +59,6 @@ const Products = props => {
       <HeaderCard
         title="Produits"
         info={`${masterData.length} produits`}
-        buttonText="+ Suggérer un produit"
         placeholder="Recherche un produit"
         onChangeText={FindProduct}
         value={search}
@@ -82,19 +75,22 @@ const Products = props => {
           <View style={styles.body}>
             <FlatList
               data={filterdData}
-              renderItem={({item, index}) => (
+              renderItem={({item}) => (
                 <TouchableOpacity
                   activeOpacity={0.9}
                   onPress={() => {
                     props.navigation.navigate('ProductDetails', {
                       _id: item._id,
                     });
-                    console.log('Clicked!');
                   }}>
                   <View style={styles.productInfo}>
                     <View style={styles.firstRow}>
                       <View style={styles.firstInRow}>
-                        <Card style={styles.pillsCard}>
+                        <Card
+                          style={{
+                            ...styles.pillsCard,
+                            backgroundColor: getColor(),
+                          }}>
                           <Image
                             style={styles.pills}
                             source={require('../assets/icons/Pill-1.png')}
@@ -151,39 +147,16 @@ const Products = props => {
             <View
               style={{
                 alignItems: 'center',
-                paddingBottom: 100,
+                paddingBottom: 50,
                 paddingTop: 20,
-                backgroundColor: Colors.lightGray,
-              }}>
-              <Pressable
-                onPress={() => {
-                  console.log('Pressed');
-                }}>
-                <Text
-                  style={{
-                    color: Colors.primary,
-                    fontFamily: 'SourceSansPro-SemiBold',
-                    fontSize: 17,
-                  }}>
-                  + Suggérer un produit
-                </Text>
-              </Pressable>
-            </View>
+                backgroundColor: Colors.headerBackground,
+              }}></View>
           </View>
         </ScrollView>
       )}
     </View>
   );
 };
-
-const colors = [
-  Colors.blue,
-  Colors.green,
-  Colors.orchid,
-  Colors.secondary,
-  Colors.primary,
-];
-let randomColor = colors[Math.floor(Math.random() * colors.length)];
 
 const styles = StyleSheet.create({
   screen: {
@@ -210,11 +183,7 @@ const styles = StyleSheet.create({
   pillsCard: {
     width: 50,
     height: 50,
-    backgroundColor: randomColor,
     borderRadius: 5,
-  },
-  pills: {
-    // color: '#fff',
   },
   userInfo: {
     position: 'relative',

@@ -78,7 +78,7 @@ const SettingProfile = ({navigation}) => {
                 onPress={() => {
                   navigation.navigate('SettingProfileEdit', {doctor: doctor});
                 }}>
-                <TitleText style={{color: Colors.primary}}>Modifier</TitleText>
+                <TitleText style={styles.modifierButton}>Modifier</TitleText>
               </TouchableOpacity>
             </View>
           </View>
@@ -129,7 +129,7 @@ const SettingProfile = ({navigation}) => {
                     doctorOffice: doctor.office,
                   });
                 }}>
-                <TitleText style={{color: Colors.primary}}>Modifier</TitleText>
+                <TitleText style={styles.modifierButton}>Modifier</TitleText>
               </TouchableOpacity>
             </View>
           </View>
@@ -206,6 +206,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderColor: Colors.gray,
     borderWidth: 0.7,
+  },
+  modifierButton: {
+    color: Colors.primary,
+    fontFamily: 'SourceSansPro-Bold',
+    fontSize: 16,
   },
   infoRow: {
     flexDirection: 'row',

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Card from '../components/Card';
@@ -13,13 +13,17 @@ import OrdDate from '../components/OrdDate';
 import TitleText from '../components/TitleText';
 import Colors from '../constants/Colors';
 
-const PrescriptionDetails = ({route}) => {
+const PrescriptionDetails = ({navigation, route}) => {
+  const [isClicked, setIsClicked] = useState(false);
   const htmlContent = `
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Merriweather:ital,wght@0,300;1,300&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100&display=swap" rel="stylesheet">
     <title>Document</title>
      <style>
         ${htmlStyles}
@@ -37,7 +41,7 @@ const PrescriptionDetails = ({route}) => {
       </div>
     </div>
     <div class="colored">
-      <div class="ord">Ordonnance</div>
+      <div class="ord">ORDONNANCE</div>
       <div class="date">Le ${route.params.item.createdAt.split('T')[0]}</div>
     </div>
     <div class="patient">
@@ -55,12 +59,13 @@ const PrescriptionDetails = ({route}) => {
   const createPDF = async () => {
     let options = {
       html: htmlContent,
-      fileName: 'test',
+      fileName: 'sobrus',
       directory: 'Download',
     };
 
     let file = await RNHTMLtoPDF.convert(options);
-    alert(file.filePath);
+    setIsClicked(false);
+    navigation.navigate('PrescriptionPdf', {path: file.filePath});
   };
   return (
     <ScrollView>
@@ -69,6 +74,7 @@ const PrescriptionDetails = ({route}) => {
           style={{
             backgroundColor: 'white',
             width: '90%',
+            height: 450,
             alignItems: 'center',
             marginTop: 15,
             marginBottom: 25,
@@ -128,9 +134,19 @@ const PrescriptionDetails = ({route}) => {
           style={{width: '100%', alignItems: 'center'}}
           onPress={() => {
             createPDF();
+            setIsClicked(true);
           }}>
           <Card style={styles.wildCardBlue}>
-            <TitleText style={{fontWeight: '400'}}>Imprimer</TitleText>
+            {isClicked ? (
+              <View>
+                <ActivityIndicator
+                  size="small"
+                  color={Colors.headerBackground}
+                />
+              </View>
+            ) : (
+              <TitleText style={{fontWeight: '400'}}>Imprimer</TitleText>
+            )}
           </Card>
         </TouchableOpacity>
       </View>
@@ -159,11 +175,16 @@ const styles = StyleSheet.create({
 });
 
 const htmlStyles = `
-body {
-  min-width: 1140px;
+*,*::after,*::before{
+  margin: 0;
+  padding: 0;
 }
-h1 {
-  font: bold 100% sans-serif;
+html{
+  padding: 0px;
+}
+body{
+  margin: 0;
+  padding: -60px;
 }
 .header {
   display: flex;
@@ -171,34 +192,44 @@ h1 {
   justify-content: space-between;
 }
 .leftHeader {
-  position: relative;
-  left: 30px;
+  width: 50%;
+}
+.leftHeader h1{
+  font-size: 26px;
+  font-family: 'Roboto Slab', serif;
+  font-weight: 900px;
+  color: rgb(101, 123, 133);
 }
 .rightHeader {
-  position: relative;
-  right: 200px;
+  width: 50%;
+}
+.rightHeader p,.leftHeader p{
+  font-size: 24px;
+  opacity: 0.4;
 }
 .ord {
   background-color: #18b1d4;
   width: 100%;
-  padding: 20px;
+  padding: 18px;
   color: #e1f5f9;
   font-weight: bolder;
-  font-size: large;
+  font-size: 28;
 }
 .date {
   background-color: #e1f5f9;
-  width: 100%;
-  text-align: end;
-  position: relative;
-  right: 100px;
-  padding: 20px;
+  width: 60%;
+  font-size: 22;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  padding-left: 64;
+  font-family: 'Roboto Slab', serif;
+  color: rgb(101, 123, 133);
 }
 .colored {
   display: flex;
-  width: auto;
-  justify-content: space-between;
-  margin-top: 30px;
+  margin-top: 48px;
 }
 
 .patient {
@@ -206,12 +237,27 @@ h1 {
   align-items: center;
   justify-content: flex-end;
   width: auto;
-  position: relative;
-  right: 100px;
-  margin-top: 30px;
+  margin-top: 64px;
+  margin-bottom: 64;
 }
-.prescription {
-  margin-left: 20px;
+
+.patient .name {
+  font-size: 20;
+  margin-right: 8px;
+  color: rgb(101, 123, 133);
+}
+
+.patient .userName {
+  font-size: 20;
+  opacity: .4;
+}
+.prescription h1{
+    font-size: 20;
+  color: rgb(101, 123, 133);
+}
+.prescription p{
+   opacity: .4;
+   margin: 8px 12;
 }
 `;
 

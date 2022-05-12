@@ -12,7 +12,6 @@ import TitleText from '../components/TitleText';
 import Colors from '../constants/Colors';
 
 const PatientDetails = ({route}) => {
-  console.log('render');
   const [patient, setPatient] = useState({});
   const fetchPatient = () => {
     // const apiURL = `http://10.0.2.2/doctor/getPatient/${route.params._id}`;
@@ -73,16 +72,6 @@ const PatientDetails = ({route}) => {
                 width: '90%',
               }}>
               <Text style={styles.title}>INFORMATION GÉNÉRALES</Text>
-              <TouchableOpacity onPress={() => {}}>
-                <Text
-                  style={{
-                    color: Colors.primary,
-                    fontFamily: 'SourceSansPro-Bold',
-                    fontSize: 16,
-                  }}>
-                  Modifier
-                </Text>
-              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.infoRow}>

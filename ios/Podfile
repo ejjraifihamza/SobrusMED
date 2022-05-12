@@ -19,6 +19,8 @@ target 'SobrusMED' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  pod 'RNFileViewer', :path => '../node_modules/react-native-file-viewer'
+
   target 'SobrusMEDTests' do
     inherit! :complete
     # Pods for testing

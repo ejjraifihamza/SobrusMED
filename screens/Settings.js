@@ -7,7 +7,7 @@ const Settings = ({navigation}) => {
   return (
     <View style={styles.screen}>
       <View style={styles.header}>
-        <TitleText style={styles.patientName}>Abderazzaq Hakimi</TitleText>
+        <TitleText style={styles.patientName}>Doctor Salim</TitleText>
       </View>
       <View
         style={{

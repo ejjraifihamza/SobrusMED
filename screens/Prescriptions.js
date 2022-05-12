@@ -13,6 +13,7 @@ import HeaderCard from '../components/HeaderCard';
 import Card from '../components/Card';
 import Colors from '../constants/Colors';
 import {patientTwoDataFilter} from '../utils/dataFilter';
+import {getPrescriptionRequest} from '../utils/requests';
 
 const Prescriptions = ({navigation}) => {
   const [Refreshing, setRefreshing] = useState(false);
@@ -31,22 +32,28 @@ const Prescriptions = ({navigation}) => {
   const fetchPrescriptions = () => {
     // const apiURL = 'http://10.0.2.2/doctor/getPrescriptions';
     const apiURL = 'https://sobrus-med.herokuapp.com/doctor/getPrescriptions';
-    fetch(apiURL)
-      .then(response => response.json())
-      .then(responseJson => {
-        setfilterdData(responseJson.output.prescriptions);
-        setmasterData(responseJson.output.prescriptions);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    getPrescriptionRequest(apiURL, setfilterdData, setmasterData);
+  };
+
+  const colors = [
+    Colors.primary,
+    Colors.green,
+    Colors.orchid,
+    Colors.blue,
+    Colors.secondary,
+  ];
+  let colorIndex = 0;
+  const getColor = () => {
+    if (colorIndex > 4) colorIndex = 0;
+    const color = colors[colorIndex];
+    colorIndex++;
+    return color;
   };
 
   useEffect(() => {
     fetchPrescriptions();
     return () => {};
   }, []);
-  console.log('filteredData', filterdData);
   return (
     <View style={styles.screen}>
       <HeaderCard
@@ -78,7 +85,11 @@ const Prescriptions = ({navigation}) => {
               <View style={styles.productInfo}>
                 <View style={styles.firstRow}>
                   <View style={styles.firstInRow}>
-                    <Card style={styles.pillsCard}>
+                    <Card
+                      style={{
+                        ...styles.pillsCard,
+                        backgroundColor: getColor(),
+                      }}>
                       <Image
                         style={styles.pills}
                         source={require('../assets/icons/Prescription-2.png')}
@@ -154,15 +165,6 @@ const Prescriptions = ({navigation}) => {
   );
 };
 
-const colors = [
-  Colors.blue,
-  Colors.green,
-  Colors.orchid,
-  Colors.secondary,
-  Colors.primary,
-];
-let randomColor = colors[Math.floor(Math.random() * colors.length)];
-
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -171,9 +173,7 @@ const styles = StyleSheet.create({
     paddingBottom: 70,
   },
   productInfo: {
-    // marginVertical: 10,
     width: '100%',
-    // justifyContent: 'center',
     alignItems: 'center',
     borderBottomColor: Colors.gray,
     borderBottomWidth: 0.3,
@@ -189,11 +189,7 @@ const styles = StyleSheet.create({
   pillsCard: {
     width: 50,
     height: 50,
-    backgroundColor: randomColor,
     borderRadius: 5,
-  },
-  pills: {
-    // color: '#fff',
   },
   userInfo: {
     position: 'relative',

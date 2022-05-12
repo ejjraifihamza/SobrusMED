@@ -24,7 +24,6 @@ const officeNameReducer = (state, action) => {
 };
 const officeEmailReducer = (state, action) => {
   if (action.type === 'DOCTOR_OFFICEEMAIL_INPUT') {
-    console.log(action.val);
     return {officeEmail: action.val, isValid: action.val.includes('@')};
   }
   return {
@@ -146,7 +145,6 @@ const SettingCabinetEdit = ({navigation, route}) => {
   };
   const doctor_id = '62714960cc2c77b3db96d84e';
   const submitHandler = doctorCredential => {
-    console.log('bbb');
     // const apiURL = `http://10.0.2.2/doctor/officeUpdate/${doctor_id}`;
     const apiURL = `https://sobrus-med.herokuapp.com/doctor/officeUpdate/${doctor_id}`;
     fetch(apiURL, {
@@ -157,7 +155,6 @@ const SettingCabinetEdit = ({navigation, route}) => {
     })
       .then(response => response.json())
       .then(responseJson => {
-        console.log(responseJson);
         if (responseJson.status === 'success') {
           Alert.alert(
             'vos informations ont été mises à jour avec succès',
@@ -203,16 +200,7 @@ const SettingCabinetEdit = ({navigation, route}) => {
           </View>
           <View style={{width: '88%', justifyContent: 'center', marginTop: 25}}>
             <TextInput
-              style={{
-                height: 50,
-                paddingVertical: 10,
-                paddingLeft: 16,
-                borderColor: Colors.gray,
-                borderWidth: 0.5,
-                borderRadius: 10,
-                width: '100%',
-                backgroundColor: Colors.headerBackground,
-              }}
+              style={styles.textInput}
               value={officeNameState.officeName}
               onChangeText={officeNameHandler}
             />
@@ -233,16 +221,7 @@ const SettingCabinetEdit = ({navigation, route}) => {
           </View>
           <View style={{width: '88%', justifyContent: 'center', marginTop: 25}}>
             <TextInput
-              style={{
-                height: 50,
-                paddingVertical: 10,
-                paddingLeft: 16,
-                borderColor: Colors.gray,
-                borderWidth: 0.5,
-                borderRadius: 10,
-                width: '100%',
-                backgroundColor: Colors.headerBackground,
-              }}
+              style={styles.textInput}
               value={officeEmailState.officeEmail}
               onChangeText={officeEmailHandler}
             />
@@ -263,16 +242,7 @@ const SettingCabinetEdit = ({navigation, route}) => {
           </View>
           <View style={{width: '88%', justifyContent: 'center', marginTop: 25}}>
             <TextInput
-              style={{
-                height: 50,
-                paddingVertical: 10,
-                paddingLeft: 16,
-                borderColor: Colors.gray,
-                borderWidth: 0.5,
-                borderRadius: 10,
-                width: '100%',
-                backgroundColor: Colors.headerBackground,
-              }}
+              style={styles.textInput}
               value={addressState.address}
               onChangeText={addressHandler}
             />
@@ -293,16 +263,7 @@ const SettingCabinetEdit = ({navigation, route}) => {
           </View>
           <View style={{width: '88%', justifyContent: 'center', marginTop: 25}}>
             <TextInput
-              style={{
-                height: 50,
-                paddingVertical: 10,
-                paddingLeft: 16,
-                borderColor: Colors.gray,
-                borderWidth: 0.5,
-                borderRadius: 10,
-                width: '100%',
-                backgroundColor: Colors.headerBackground,
-              }}
+              style={styles.textInput}
               value={townState.town}
               onChangeText={townHandler}
             />
@@ -323,16 +284,7 @@ const SettingCabinetEdit = ({navigation, route}) => {
           </View>
           <View style={{width: '88%', justifyContent: 'center', marginTop: 25}}>
             <TextInput
-              style={{
-                height: 50,
-                paddingVertical: 10,
-                paddingLeft: 16,
-                borderColor: Colors.gray,
-                borderWidth: 0.5,
-                borderRadius: 10,
-                width: '100%',
-                backgroundColor: Colors.headerBackground,
-              }}
+              style={styles.textInput}
               value={phoneState.phone}
               onChangeText={phoneHandler}
             />
@@ -355,16 +307,7 @@ const SettingCabinetEdit = ({navigation, route}) => {
           </View>
           <View style={{width: '88%', justifyContent: 'center', marginTop: 25}}>
             <TextInput
-              style={{
-                height: 50,
-                paddingVertical: 10,
-                paddingLeft: 16,
-                borderColor: Colors.gray,
-                borderWidth: 0.5,
-                borderRadius: 10,
-                width: '100%',
-                backgroundColor: Colors.headerBackground,
-              }}
+              style={styles.textInput}
               value={faxState.fax}
               onChangeText={faxHandler}
             />
@@ -432,6 +375,16 @@ const styles = StyleSheet.create({
     marginBottom: 80,
     borderColor: Colors.gray,
     borderWidth: 0.7,
+  },
+  textInput: {
+    height: 50,
+    paddingVertical: 10,
+    paddingLeft: 16,
+    borderColor: Colors.gray,
+    borderWidth: 0.5,
+    borderRadius: 10,
+    width: '100%',
+    backgroundColor: Colors.headerBackground,
   },
   title: {color: 'black', fontSize: 15, marginVertical: 15, fontWeight: '600'},
 });

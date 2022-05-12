@@ -12,6 +12,7 @@ import {
 import HeaderCard from '../components/HeaderCard';
 import Colors from '../constants/Colors';
 import {patientDataFilter} from '../utils/dataFilter';
+import {getPatientRequest} from '../utils/requests';
 
 const Patients = ({navigation}) => {
   const [Refreshing, setRefreshing] = useState(false);
@@ -26,16 +27,7 @@ const Patients = ({navigation}) => {
   const fetchPatients = () => {
     // const apiURL = 'http://10.0.2.2/doctor/getPatients';
     const apiURL = 'https://sobrus-med.herokuapp.com/doctor/getPatients';
-    fetch(apiURL)
-      .then(response => response.json())
-      .then(responseJson => {
-        console.log(responseJson.output);
-        setfilterdData(responseJson.output.patients);
-        setmasterData(responseJson.output.patients);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    getPatientRequest(apiURL, setfilterdData, setmasterData);
   };
 
   useEffect(() => {
@@ -47,7 +39,6 @@ const Patients = ({navigation}) => {
       <HeaderCard
         title="Mes patients"
         info={`${masterData.length} patients`}
-        buttonText="+ Nouveau patient"
         placeholder="Recherche un patient"
         onChangeText={FindPatient}
         value={search}

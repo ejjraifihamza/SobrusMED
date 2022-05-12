@@ -146,7 +146,6 @@ const SettingProfileEdit = ({navigation, route}) => {
   };
   const doctor_id = '62714960cc2c77b3db96d84e';
   const submitHandler = doctorCredential => {
-    console.log('bbb');
     // const apiURL = `http://10.0.2.2/doctor/profileUpdate/${doctor_id}`;
     const apiURL = `https://sobrus-med.herokuapp.com/doctor/profileUpdate/${doctor_id}`;
     fetch(apiURL, {
@@ -157,7 +156,6 @@ const SettingProfileEdit = ({navigation, route}) => {
     })
       .then(response => response.json())
       .then(responseJson => {
-        console.log(responseJson);
         if (responseJson.status === 'success') {
           Alert.alert(
             'vos informations ont été mises à jour avec succès',
@@ -204,16 +202,7 @@ const SettingProfileEdit = ({navigation, route}) => {
           </View>
           <View style={{width: '88%', justifyContent: 'center', marginTop: 25}}>
             <TextInput
-              style={{
-                height: 50,
-                paddingVertical: 10,
-                paddingLeft: 16,
-                borderColor: Colors.gray,
-                borderWidth: 0.5,
-                borderRadius: 10,
-                width: '100%',
-                backgroundColor: Colors.headerBackground,
-              }}
+              style={styles.textInput}
               value={accountNameState.accountName}
               onChangeText={accountNameHandler}
             />
@@ -236,16 +225,7 @@ const SettingProfileEdit = ({navigation, route}) => {
           </View>
           <View style={{width: '88%', justifyContent: 'center', marginTop: 25}}>
             <TextInput
-              style={{
-                height: 50,
-                paddingVertical: 10,
-                paddingLeft: 16,
-                borderColor: Colors.gray,
-                borderWidth: 0.5,
-                borderRadius: 10,
-                width: '100%',
-                backgroundColor: Colors.headerBackground,
-              }}
+              style={styles.textInput}
               value={specialityState.speciality}
               onChangeText={specialityHandler}
             />
@@ -268,16 +248,7 @@ const SettingProfileEdit = ({navigation, route}) => {
           </View>
           <View style={{width: '88%', justifyContent: 'center', marginTop: 25}}>
             <TextInput
-              style={{
-                height: 50,
-                paddingVertical: 10,
-                paddingLeft: 16,
-                borderColor: Colors.gray,
-                borderWidth: 0.5,
-                borderRadius: 10,
-                width: '100%',
-                backgroundColor: Colors.headerBackground,
-              }}
+              style={styles.textInput}
               value={emailState.email}
               onChangeText={emailHandler}
             />
@@ -298,16 +269,7 @@ const SettingProfileEdit = ({navigation, route}) => {
           </View>
           <View style={{width: '88%', justifyContent: 'center', marginTop: 25}}>
             <TextInput
-              style={{
-                height: 50,
-                paddingVertical: 10,
-                paddingLeft: 16,
-                borderColor: Colors.gray,
-                borderWidth: 0.5,
-                borderRadius: 10,
-                width: '100%',
-                backgroundColor: Colors.headerBackground,
-              }}
+              style={styles.textInput}
               value={phoneState.phone}
               onChangeText={phoneHandler}
             />
@@ -330,16 +292,7 @@ const SettingProfileEdit = ({navigation, route}) => {
           </View>
           <View style={{width: '88%', justifyContent: 'center', marginTop: 25}}>
             <TextInput
-              style={{
-                height: 50,
-                paddingVertical: 10,
-                paddingLeft: 16,
-                borderColor: Colors.gray,
-                borderWidth: 0.5,
-                borderRadius: 10,
-                width: '100%',
-                backgroundColor: Colors.headerBackground,
-              }}
+              style={styles.textInput}
               value={birthdayState.birthday}
               onChangeText={birthdayHandler}
             />
@@ -362,16 +315,7 @@ const SettingProfileEdit = ({navigation, route}) => {
           </View>
           <View style={{width: '88%', justifyContent: 'center', marginTop: 25}}>
             <TextInput
-              style={{
-                height: 50,
-                paddingVertical: 10,
-                paddingLeft: 16,
-                borderColor: Colors.gray,
-                borderWidth: 0.5,
-                borderRadius: 10,
-                width: '100%',
-                backgroundColor: Colors.headerBackground,
-              }}
+              style={styles.textInput}
               value={inpeState.inpe}
               onChangeText={inpeHandler}
             />
@@ -439,6 +383,16 @@ const styles = StyleSheet.create({
     marginBottom: 80,
     borderColor: Colors.gray,
     borderWidth: 0.7,
+  },
+  textInput: {
+    height: 50,
+    paddingVertical: 10,
+    paddingLeft: 16,
+    borderColor: Colors.gray,
+    borderWidth: 0.5,
+    borderRadius: 10,
+    width: '100%',
+    backgroundColor: Colors.headerBackground,
   },
   title: {color: 'black', fontSize: 15, marginVertical: 15, fontWeight: '600'},
 });

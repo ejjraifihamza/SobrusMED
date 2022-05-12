@@ -88,31 +88,13 @@ const ProductDetails = ({route}) => {
             <Text style={styles.title}>POSOLOGIES</Text>
           </View>
 
-          <View
-            style={{
-              flexDirection: 'row',
-              width: '90%',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderBottomColor: Colors.gray,
-              borderBottomWidth: 0.3,
-              paddingVertical: 10,
-            }}>
+          <View style={styles.textView}>
             <Text style={styles.text}>Adulte</Text>
             <Text style={styles.text}>
               {product.dosage && product.dosage.adult}
             </Text>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              width: '90%',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderBottomColor: Colors.gray,
-              borderBottomWidth: 0.3,
-              paddingVertical: 10,
-            }}>
+          <View style={styles.textView}>
             <Text style={styles.text}>Enfant</Text>
             <Text style={styles.text}>
               {product.dosage && product.dosage.child}
@@ -136,6 +118,15 @@ const ProductDetails = ({route}) => {
     </ScrollView>
   );
 };
+
+const colors = [
+  Colors.blue,
+  Colors.green,
+  Colors.orchid,
+  Colors.secondary,
+  Colors.primary,
+];
+let randomColor = colors[Math.floor(Math.random() * colors.length)];
 
 const styles = StyleSheet.create({
   screen: {
@@ -166,7 +157,7 @@ const styles = StyleSheet.create({
   pillsCard: {
     width: 55,
     height: 55,
-    backgroundColor: Colors.secondary,
+    backgroundColor: randomColor,
     borderRadius: 5,
   },
   infoRow: {
@@ -203,6 +194,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderColor: Colors.gray,
     borderWidth: 0.7,
+  },
+  textView: {
+    flexDirection: 'row',
+    width: '90%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomColor: Colors.gray,
+    borderBottomWidth: 0.3,
+    paddingVertical: 10,
   },
   title: {
     color: 'black',
